@@ -402,7 +402,6 @@ public class MyGoogleMap extends MapActivity
     sData.start();
   }
   
-  //將Tracker傳來的座標更新&showrange要不要顯示超出或安全
   public int refreshDouble2Geo(double lat, double longa)
   {
     GeoPoint gp = new GeoPoint((int)(lat * 1e6),

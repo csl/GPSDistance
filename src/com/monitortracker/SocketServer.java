@@ -48,7 +48,7 @@ public class SocketServer implements Runnable
 		      i++;
 		    }      
 				 
-        MonitorMap.refreshDouble2Geo(GPSData[0], GPSData[1], 1);
+        MonitorMap.refreshDouble2Geo(GPSData[0], GPSData[1]);
 		    
 		    //¦^¶Çµ¹Tracker, OK
         DataOutputStream out = new DataOutputStream(con.getOutputStream());
