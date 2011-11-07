@@ -80,8 +80,6 @@ public class MyGoogleMap extends MapActivity
   public TextView label;
   public String oldGPSRangeData;
   
-  private medplayer mp;
-  
   @Override 
   protected void onCreate(Bundle icicle) 
   { 
@@ -90,7 +88,7 @@ public class MyGoogleMap extends MapActivity
     setContentView(R.layout.main2); 
 
     //Checking Status
-    if (CheckInternet(3))
+    if (CheckInternet(3))   //判別是否有網路和GPS
     {
         String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
         if(provider == null)
@@ -104,8 +102,8 @@ public class MyGoogleMap extends MapActivity
       openOptionsDialog("NO Internet");
       return;
     }   
-    
-    
+   
+    //抓取現在IP
     String ip = getLocalIpAddress();
 
     timer = new Timer();
@@ -128,6 +126,7 @@ public class MyGoogleMap extends MapActivity
     intZoomLevel = 18; 
     mMapController01.setZoom(intZoomLevel); 
     
+    //取得gps services
     mLocationManager01 = (LocationManager) getSystemService(Context.LOCATION_SERVICE); 
      
     getLocationProvider();     
@@ -171,6 +170,7 @@ public class MyGoogleMap extends MapActivity
     
       alert.show();      
         
+     //命令gps, 只要有資料更新call mLocationListener01的function
     mLocationManager01.requestLocationUpdates(strLocationProvider, 2000, 10, mLocationListener01); 
      
     //mMapController01.setCenter(getMapLocations(true).get(0).getPoint());    
@@ -263,17 +263,19 @@ public class MyGoogleMap extends MapActivity
     { 
       // TODO Auto-generated method stub 
       mLocation01 = location; 
+      
+       //我這手機經緯度拿取
       nowGeoPoint = getGeoByLocation(location); 
-
-      //update other phone GPS
       double Latitude = nowGeoPoint.getLatitudeE6()/ 1E6;
       double Longitude = nowGeoPoint.getLongitudeE6()/ 1E6;
       
+      //現在的經緯度送出去給另一隻手機
       SendGPSData(Latitude + "," + Longitude);
       
       //refresh distance
       if (nowGeoPoint != null || otherGeoPoint != null)
       {
+        //計算距離
         double gpsdis = GetDistance(nowGeoPoint, otherGeoPoint);
         label.setText("現在點距離：" + gpsdis);
       }
@@ -281,7 +283,7 @@ public class MyGoogleMap extends MapActivity
       {
         label.setText("尚未收到對方手機GPS訊號");        
       }
-      else if (otherGeoPoint == null)
+      else if (nowGeoPoint == null)
       {
         label.setText("尚未設置GPS訊號");        
       }
@@ -392,7 +394,7 @@ public class MyGoogleMap extends MapActivity
     } 
   }
   
-  //傳送GPS Range座標出去給Tracker
+  //傳送GPS座標出去
   public void SendGPSData(String GPSData)
   {
     sData = new SendDataSocket(this);
