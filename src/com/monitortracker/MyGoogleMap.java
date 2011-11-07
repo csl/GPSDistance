@@ -410,7 +410,22 @@ public class MyGoogleMap extends MapActivity
         (int)(longa * 1e6));
     
     otherGeoPoint = gp;
-    
+
+    //refresh distance
+    if (nowGeoPoint != null || otherGeoPoint != null)
+    {
+      //計算距離
+      double gpsdis = GetDistance(nowGeoPoint, otherGeoPoint);
+      label.setText("現在點距離：" + gpsdis);
+    }
+    else if (otherGeoPoint == null)
+    {
+      label.setText("尚未收到對方手機GPS訊號");        
+    }
+    else if (nowGeoPoint == null)
+    {
+      label.setText("尚未設置GPS訊號");        
+    }
     return 1;
   }
   
